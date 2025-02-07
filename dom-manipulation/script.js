@@ -46,8 +46,29 @@ function createAddQuoteForm() {
         } else {
             alert("Please enter both a quote and a category.");
         }
-    });
+    ;
+
+
+addQuoteToDOM(newQuote);
+
+document.getElementById("quote-form").reset();
+}  else {
+     alert ("Please enter both a quote and a category.");
 }
 
+});
+
+
+function addQuoteToDOM(quote) {
+    const quoteList = document.getElementById("quote-list");
+    const li = document.createElement("li");
+    li.textContent = `"${quote.text}" - [${quote.category}]`;
+    quoteList.appendChild(li);
+}
 // Initialize form handling
 createAddQuoteForm();
+
+function InitializeQuoteList() {
+    quotes.forEach(addQuoteToDOM)
+}
+InitializeQuoteList();
