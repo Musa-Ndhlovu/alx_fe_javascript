@@ -7,17 +7,20 @@
 </head>
 <body>
   <h1>Dynamic Quote Generator</h1>
+
+  <form id="createAddQuoteForm" action="/sumbmit-form" method="POST">
+    
   <div id="quoteDisplay"></div>
   <button id="newQuote">Show New Quote</button>
   <script src="script.js"></script>
 
-  <form id="createAddQuoteForm" action="/sumbmit-form" method="POST">
+  
   <div>
     <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
     <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
     <button onclick="addQuote()">Add Quote</button>
   </div>
   
-  </form>
+</form>
 </body>
 </html>
