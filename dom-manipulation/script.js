@@ -36,6 +36,29 @@ function addQuote() {
         return;
     }
 
+   // creating a form and adding new quotes
+function createAddQuoteForm() {
+    document.getElementById("quote-form").addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        const text = document.getElementById("quote-text").value.trim();
+        const category = document.getElementById("quote-category").value.trim();
+
+        if (text && category) {
+            const newQuote = {text, category};
+            quotesuote.push(newQuote);
+
+addQuoteToDOM(newQuote);
+
+document.getElementById("quote-form").reset();
+}  else {
+     alert ("Please enter both a quote and a category.");
+}
+
+});
+
+} 
+
     // Create a new quote object and add it to the array
     const newQuote = { text, category };
     quotes.push(newQuote);
