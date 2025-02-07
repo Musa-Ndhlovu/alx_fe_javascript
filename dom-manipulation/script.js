@@ -23,30 +23,21 @@ function showRandomQuote() {
     }
 
     const randomIndex = Math.floor(Math.random() * quotes.length);
-
-    const quote = quotes[randomIndex];
-
+    const quote = quotes[randomIndex]; 
     document.getElementById("quote-box").innerText= `"{quote.text}" - [${quote.category}]`;
 }
 
 // creating a form and adding new quotes
 function createAddQuoteForm() {
-
     document.getElementById("quote-form").addEventListener("submit", function(event) {
         event.preventDefault();
 
         const text = document.getElementById("quote-text").value.trim();
-
         const category = document.getElementById("quote-category").value.trim();
 
         if (text && category) {
-            quotes.push({ text, category });
-            alert("Quote added successfully!");
-            document.getElementById("quote-form").reset();
-        } else {
-            alert("Please enter both a quote and a category.");
-        }
-    ;
+            const newQuote = {text, category};
+            quotesuote.push(newQuote);
 
 
 addQuoteToDOM(newQuote);
@@ -58,6 +49,7 @@ document.getElementById("quote-form").reset();
 
 });
 
+}
 
 function addQuoteToDOM(quote) {
     const quoteList = document.getElementById("quote-list");
