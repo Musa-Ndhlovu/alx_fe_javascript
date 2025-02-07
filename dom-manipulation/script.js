@@ -1,3 +1,4 @@
+// Assesssment 0
 //JS Implementation
 document.addEventListener("DOMImplementaion", function(){
 
@@ -5,11 +6,48 @@ document.addEventListener("DOMImplementaion", function(){
 
 const submitButton = document.getElementById("submitButton") 
 
-
 let  showRandomQuote = ["winter", "summer", "spring", "autum"]
 
-console.log("showRandomQuote")
+const quotes = [
+    {text: "Winter is the best weather", category: "Cold"}
+    {text: "Summer can be a bit too hot", category: "Heat" }
+    {text: "Spring can be very pretty", category: "Leaves"}
+    {text: "what happenes in autum?", category: "Weather"}
+];
 
-const form = documentElementById('createAddQuoteForm');
+// random quote
+function showRandomQuote() {
+    if (quotes.length === 0) {
+      document.getElementById("quote-box").innerText="No quotes available";
+      return;
+    }
 
-form.addEventListener('click', function(submit))
+    const randomIndex = Math.floor(Math.random() * quotes.length);
+
+    const quote = quotes[randomIndex];
+
+    document.getElementById("quote-box").innerText= `"{quote.text}" - [${quote.category}]`;
+}
+
+// creating a form and adding new quotes
+function createAddQuoteForm() {
+
+    document.getElementById("quote-form").addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        const text = document.getElementById("quote-text").value.trim();
+
+        const category = document.getElementById("quote-category").value.trim();
+
+        if (text && category) {
+            quotes.push({ text, category });
+            alert("Quote added successfully!");
+            document.getElementById("quote-form").reset();
+        } else {
+            alert("Please enter both a quote and a category.");
+        }
+    });
+}
+
+// Initialize form handling
+createAddQuoteForm();
