@@ -293,6 +293,22 @@ restoreLastViewedQuote();
     }
   ]
 
+  //Turning failing checks to pass
+  // Function to export quotes as a JSON file
+function exportToJsonFile() {
+    const dataStr = JSON.stringify(quotes, null, 2);
+    const blob = new Blob([dataStr], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "quotes.json";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+}
+
+
 //Assessment 2
 //step 2
 
@@ -531,4 +547,4 @@ function populateCategories() {
 }
 
 
-//step 3
+//Assessment 3
