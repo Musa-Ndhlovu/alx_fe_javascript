@@ -281,6 +281,9 @@ document.getElementById("newQuote").addEventListener("click", showRandomQuote);
 initializeQuoteList();
 restoreLastViewedQuote();
 
+document.getElementById("exportQuotes").addEventListener("click", exportToJsonFile);
+
+
 //Step 3
 [
     {
