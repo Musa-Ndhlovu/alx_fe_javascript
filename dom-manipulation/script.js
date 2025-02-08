@@ -548,3 +548,145 @@ function populateCategories() {
 
 
 //Assessment 3
+//Step 1 
+
+async function fetchQuotes() {
+    try {
+        let response = await fetch("https://jsonplaceholder.typicode.com/posts");
+        let data = await response.json();
+        return data.slice(0, 10); // Simulating fetching only 10 quotes
+    } catch (error) {
+        console.error("Error fetching quotes:", error);
+        return [];
+    }
+}
+//updates
+function startFetchingQuotes(interval = 5000) {
+    setInterval(async () => {
+        let quotes = await fetchQuotes();
+        console.log("Updated Quotes:", quotes);
+        // You can update the UI or local storage here
+    }, interval);
+}
+
+// Start fetching every 5 seconds
+startFetchingQuotes();
+
+//local Storage
+async function fetchAndStoreQuotes() {
+    let quotes = await fetchQuotes();
+    localStorage.setItem("quotes", JSON.stringify(quotes));
+}
+
+// Fetch and store quotes on page load
+fetchAndStoreQuotes();
+
+
+//step 2
+async function syncQuotes() {
+    try {
+        let serverQuotes = await fetchQuotes();
+        let localQuotes = JSON.parse(localStorage.getItem("quotes")) || [];
+
+        // Check for differences
+        let isDifferent = JSON.stringify(serverQuotes) !== JSON.stringify(localQuotes);
+        
+        if (isDifferent) {
+            console.log("New quotes detected! Updating local storage...");
+            localStorage.setItem("quotes", JSON.stringify(serverQuotes));
+            updateUI(serverQuotes); // Function to refresh UI
+        }
+    } catch (error) {
+        console.error("Error syncing quotes:", error);
+    }
+}
+
+function startQuoteSync(interval = 10000) { // Sync every 10 seconds
+    setInterval(syncQuotes, interval);
+}
+
+// Start syncing
+startQuoteSync();
+
+async function syncQuotes() {
+    try {
+        let serverQuotes = await fetchQuotes();
+        let localQuotes = JSON.parse(localStorage.getItem("quotes")) || [];
+
+        // Conflict Resolution: Check if server has new/updated quotes
+        if (!arraysAreEqual(serverQuotes, localQuotes)) {
+            console.log("Conflict detected! Updating local storage with server data...");
+            localStorage.setItem("quotes", JSON.stringify(serverQuotes));
+            updateUI(serverQuotes);
+        }
+    } catch (error) {
+        console.error("Error syncing quotes:", error);
+    }
+}
+
+// Helper function to compare arrays
+function arraysAreEqual(arr1, arr2) {
+    return JSON.stringify(arr1) === JSON.stringify(arr2);
+}
+
+function updateUI(quotes) {
+    const quoteContainer = document.getElementById("quote-list");
+    quoteContainer.innerHTML = "";
+    
+    quotes.forEach((quote) => {
+        let quoteItem = document.createElement("div");
+        quoteItem.className = "quote";
+        quoteItem.innerText = quote.title; // Adjust based on your data structure
+        quoteContainer.appendChild(quoteItem);
+    });
+}
+
+//Step 3
+async function syncQuotes() {
+    try {
+        let serverQuotes = await fetchQuotes();
+        let localQuotes = JSON.parse(localStorage.getItem("quotes")) || [];
+
+        if (!arraysAreEqual(serverQuotes, localQuotes)) {
+            console.log("Conflict detected! Notifying user...");
+            showConflictNotification(serverQuotes, localQuotes);
+        }
+    } catch (error) {
+        console.error("Error syncing quotes:", error);
+    }
+}
+
+// Helper function to compare arrays
+function arraysAreEqual(arr1, arr2) {
+    return JSON.stringify(arr1) === JSON.stringify(arr2);
+}
+
+function showConflictNotification(serverQuotes, localQuotes) {
+    const notification = document.createElement("div");
+    notification.id = "conflict-notification";
+    notification.innerHTML = `
+        <p>New quotes are available. Would you like to update?</p>
+        <button onclick="resolveConflict('server', ${JSON.stringify(serverQuotes)})">Use Server Data</button>
+        <button onclick="resolveConflict('local', ${JSON.stringify(localQuotes)})">Keep Local Data</button>
+    `;
+    document.body.appendChild(notification);
+}
+
+function resolveConflict(choice, data) {
+    if (choice === "server") {
+        console.log("User selected server data.");
+        localStorage.setItem("quotes", JSON.stringify(data));
+    } else {
+        console.log("User kept local data.");
+    }
+    
+    // Remove notification after resolving
+    document.getElementById("conflict-notification").remove();
+    
+    // Refresh UI
+    updateUI(JSON.parse(localStorage.getItem("quotes")));
+}
+
+let quotes = JSON.parse(localStorage.getItem("quotes"));
+quotes[0].title = "Manually edited quote!";
+localStorage.setItem("quotes", JSON.stringify(quotes));
