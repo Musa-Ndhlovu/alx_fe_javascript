@@ -281,8 +281,108 @@ document.getElementById("newQuote").addEventListener("click", showRandomQuote);
 initializeQuoteList();
 restoreLastViewedQuote();
 
-document.getElementById("Export +Quotes").addEventListener("click", exportToJsonFile);
+document.getElementById["Export Quotes"].addEventListener("click", exportToJsonFile);
 
+function importFromJsonFile(event) {
+    const fileReader = new FileReader();
+    fileReader.onload = function(event) {
+      const importedQuotes = JSON.parse(event.target.result);
+      quotes.push(...importedQuotes);
+      saveQuotes();
+      alert('Quotes imported successfully!');
+    };
+    fileReader.readAsText(event.target.files[0]);
+  }
+
+  document.getElementById("importQuotes").addEventListener("change", importFromJsonFile);
+document.getElementById("importQuotesBtn").addEventListener("click", () => {
+    document.getElementById("importQuotes").click();
+});
+
+function importFromJsonFile(event) {
+    const file = event.target.files[0];
+    if (!file) {
+        alert("No file selected.");
+        return;
+    }
+
+    const fileReader = new FileReader();
+
+    fileReader.onload = function(event) {
+        try {
+            const importedQuotes = JSON.parse(event.target.result);
+            
+            if (!Array.isArray(importedQuotes) || !importedQuotes.every(q => q.text && q.category)) {
+                alert("Invalid file format! Ensure the JSON file contains an array of {text, category} objects.");
+                return;
+            }
+
+            // Merge new quotes with existing ones
+            quotes.push(...importedQuotes);
+            saveQuotesToLocalStorage();
+            
+            // Refresh displayed quotes
+            document.getElementById("quoteList").innerHTML = "";
+            initializeQuoteList();
+            
+            alert("Quotes imported successfully!");
+        } catch (error) {
+            alert("Error importing quotes. Please check the JSON file format.");
+        }
+    };
+
+    fileReader.readAsText(file);
+}
+
+document.getElementById("importQuotes").addEventListener("change", importFromJsonFile);
+
+// JSON Import Function
+function importFromJsonFile(event) {
+    const fileReader = new FileReader();
+
+    fileReader.onload = function(event) {
+        try {
+            const importedQuotes = JSON.parse(event.target.result);
+            
+            if (!Array.isArray(importedQuotes) || !importedQuotes.every(q => q.text && q.category)) {
+                alert("Invalid file format! Ensure the JSON file contains an array of {text, category} objects.");
+                return;
+            }
+
+            quotes.push(...importedQuotes);
+            saveQuotesToLocalStorage();
+            
+            // Clear the current list and refresh with the imported quotes
+            document.getElementById("quoteList").innerHTML = "";
+            initializeQuoteList();
+            
+            alert("Quotes imported successfully!");
+        } catch (error) {
+            alert("Error importing quotes. Please check the JSON file format.");
+        }
+    };
+
+    fileReader.readAsText(event.target.files[0]);
+}
+
+// Ensure you have an event listener to trigger the import
+document.getElementById("importQuotes").addEventListener("change", importFromJsonFile);
+
+// Corrected addQuoteToDOM function
+function addQuoteToDOM(quote) {
+    const quoteList = document.getElementById("quoteList");
+    const li = document.createElement("li");
+    li.textContent = `${quote.text} - [${quote.category}]`;  // Correct usage of backticks
+    quoteList.appendChild(li);
+}
+
+// Initialize the quote list
+function initializeQuoteList() {
+    quotes.forEach(addQuoteToDOM);
+}
+
+// Populate the initial list of quotes from Local Storage
+initializeQuoteList();
 
 //Step 3
 [
