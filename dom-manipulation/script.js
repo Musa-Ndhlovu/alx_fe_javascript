@@ -582,6 +582,7 @@ async function fetchAndStoreQuotes() {
 fetchAndStoreQuotes();
 
 
+
 //step 2
 async function syncQuotes() {
     try {
@@ -641,6 +642,7 @@ function updateUI(quotes) {
     });
 }
 
+
 //Step 3
 async function syncQuotes() {
     try {
@@ -690,3 +692,34 @@ function resolveConflict(choice, data) {
 let quotes = JSON.parse(localStorage.getItem("quotes"));
 quotes[0].title = "Manually edited quote!";
 localStorage.setItem("quotes", JSON.stringify(quotes));
+
+//step 4
+const { fetchQuotes } = require("../syncModule"); // Import your function
+
+test("fetchQuotes() should return an array of quotes", async () => {
+    const quotes = await fetchQuotes();
+    expect(Array.isArray(quotes)).toBe(true);
+    expect(quotes.length).toBeGreaterThan(0);
+});
+const { syncQuotes } = require("../syncModule");
+
+test("syncQuotes() should detect differences between local and server data", async () => {
+    let mockServerQuotes = [{ id: 1, title: "Server Quote" }];
+    let mockLocalQuotes = [{ id: 1, title: "Local Edited Quote" }];
+    
+    localStorage.setItem("quotes", JSON.stringify(mockLocalQuotes));
+
+    let conflictDetected = syncQuotes(mockServerQuotes);
+    expect(conflictDetected).toBe(true);
+});
+
+const { resolveConflict } = require("../syncModule");
+
+test("resolveConflict() should correctly update localStorage with server data", () => {
+    let serverData = [{ id: 1, title: "Updated Server Quote" }];
+    
+    resolveConflict("server", serverData);
+    let storedData = JSON.parse(localStorage.getItem("quotes"));
+
+    expect(storedData).toEqual(serverData);
+});
