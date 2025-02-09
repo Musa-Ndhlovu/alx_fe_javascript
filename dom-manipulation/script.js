@@ -281,6 +281,7 @@ document.getElementById("newQuote").addEventListener("click", showRandomQuote);
 initializeQuoteList();
 restoreLastViewedQuote();
 
+//FIXING THE FAILS
 document.getElementById["Export Quotes"].addEventListener("click", exportToJsonFile);
 
 function importFromJsonFile(event) {
@@ -664,7 +665,7 @@ async function fetchQuotes() {
     }
 }
 //updates
-function startFetchingQuotes(interval = 5000) {
+function fetchQuotesFromServer(interval = 5000) {
     setInterval(async () => {
         let quotes = await fetchQuotes();
         console.log("Updated Quotes:", quotes);
