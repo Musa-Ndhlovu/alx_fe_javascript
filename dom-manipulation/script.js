@@ -282,7 +282,7 @@ initializeQuoteList();
 restoreLastViewedQuote();
 
 //FIXING THE FAILS
-document.getElementById["Export Quotes"].addEventListener("click", exportToJsonFile);
+document.getElementById("Export Quotes").addEventListener("click", exportToJsonFile);
 
 function importFromJsonFile(event) {
     const fileReader = new FileReader();
@@ -397,7 +397,7 @@ initializeQuoteList();
     }
   ]
 
-  //Turning failing checks to pass
+  //FIXING THE FAILS
   // Function to export quotes as a JSON file
 function exportToJsonFile() {
     const dataStr = JSON.stringify(quotes, null, 2);
@@ -411,6 +411,34 @@ function exportToJsonFile() {
     a.click();
     document.body.removeChild(a);
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    const exportButton = document.getElementById("exportQuotes");
+  
+    if (exportButton) {
+      exportButton.addEventListener("click", exportQuotes);
+    }
+  });
+  
+  function exportQuotes() {
+    const quotes = JSON.parse(localStorage.getItem("quotes")) || [];
+  
+    if (quotes.length === 0) {
+      alert("No quotes to export!");
+      return;
+    }
+  
+    const quotesText = quotes.map(q => `"${q.text}" - ${q.author}`).join("\n");
+    const blob = new Blob([quotesText], { type: "text/plain" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "quotes.txt";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
+  
+
 
 
 //Assessment 2
