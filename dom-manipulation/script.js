@@ -746,6 +746,7 @@ function updateUI(quotes) {
     });
 }
 
+fetch("method", "POST", "headers", "Content-Type")
 
 //Step 3
 async function syncQuotes() {
