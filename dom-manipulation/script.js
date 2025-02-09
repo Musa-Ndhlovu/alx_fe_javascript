@@ -373,7 +373,7 @@ document.getElementById("importQuotes").addEventListener("change", importFromJso
 function addQuoteToDOM(quote) {
     const quoteList = document.getElementById("quoteList");
     const li = document.createElement("li");
-    li.textContent = `${quote.text} - [${quote.category}]`;  // Correct usage of backticks
+    li.textContent = `${quote.text} - [${quote.category}]`;  
     quoteList.appendChild(li);
 }
 
@@ -478,7 +478,7 @@ function addQuote() {
 
     saveQuotesToLocalStorage();
     addQuoteToDOM(newQuote);
-    populateCategories(); // Update category dropdown dynamically
+    populateCategories(); 
 
     document.getElementById("newQuoteText").value = "";
     document.getElementById("newQuoteCategory").value = "";
@@ -497,7 +497,7 @@ function filterQuotesByCategory() {
     const selectedCategory = document.getElementById("categoryFilter").value;
     const quoteList = document.getElementById("quoteList");
 
-    quoteList.innerHTML = ""; // Clear list
+    quoteList.innerHTML = "";
 
     quotes.forEach(quote => {
         if (selectedCategory === "all" || quote.category === selectedCategory) {
@@ -538,7 +538,7 @@ function importFromJsonFile(event) {
             
             document.getElementById("quoteList").innerHTML = "";
             initializeQuoteList();
-            populateCategories(); // Refresh category dropdown
+            populateCategories(); 
             
             alert("Quotes imported successfully!");
         } catch (error) {
@@ -658,7 +658,7 @@ async function fetchQuotes() {
     try {
         let response = await fetch("https://jsonplaceholder.typicode.com/posts");
         let data = await response.json();
-        return data.slice(0, 10); // Simulating fetching only 10 quotes
+        return data.slice(0, 10); 
     } catch (error) {
         console.error("Error fetching quotes:", error);
         return [];
@@ -669,7 +669,7 @@ function fetchQuotesFromServer(interval = 5000) {
     setInterval(async () => {
         let quotes = await fetchQuotes();
         console.log("Updated Quotes:", quotes);
-        // You can update the UI or local storage here
+        
     }, interval);
 }
 
@@ -699,14 +699,14 @@ async function syncQuotes() {
         if (isDifferent) {
             console.log("New quotes detected! Updating local storage...");
             localStorage.setItem("quotes", JSON.stringify(serverQuotes));
-            updateUI(serverQuotes); // Function to refresh UI
+            updateUI(serverQuotes); 
         }
     } catch (error) {
         console.error("Error syncing quotes:", error);
     }
 }
 
-function startQuoteSync(interval = 10000) { // Sync every 10 seconds
+function startQuoteSync(interval = 10000) { 
     setInterval(syncQuotes, interval);
 }
 
@@ -741,7 +741,7 @@ function updateUI(quotes) {
     quotes.forEach((quote) => {
         let quoteItem = document.createElement("div");
         quoteItem.className = "quote";
-        quoteItem.innerText = quote.title; // Adjust based on your data structure
+        quoteItem.className = "quote";
         quoteContainer.appendChild(quoteItem);
     });
 }
@@ -799,7 +799,7 @@ quotes[0].title = "Manually edited quote!";
 localStorage.setItem("quotes", JSON.stringify(quotes));
 
 //step 4
-const { fetchQuotes } = require("../syncModule"); // Import your function
+//step 4
 
 test("fetchQuotes() should return an array of quotes", async () => {
     const quotes = await fetchQuotes();
@@ -828,3 +828,25 @@ test("resolveConflict() should correctly update localStorage with server data", 
 
     expect(storedData).toEqual(serverData);
 });
+
+
+async function sendData(data) {
+    try {
+      const response = await fetch(mockApiUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+  
+      if (response.ok) {
+        showNotification("Quotes synced with server!", "success");
+      } else {
+        showNotification("Failed to sync quotes.", "error");
+      }
+    } catch (error) {
+      showNotification("Error syncing quotes!", "error");
+      console.error("Error:", error);
+    }
+  }
